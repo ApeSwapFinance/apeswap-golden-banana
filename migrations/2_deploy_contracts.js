@@ -4,16 +4,15 @@ const MockBEP20 = artifacts.require("MockBEP20");
 const { getNetworkConfig } = require('../deploy.config')
 
 module.exports = async function(deployer,  network, accounts) {
-    const { bananaAddress } = getNetworkConfig(network, accounts);
+    console.log(network)
+    let { bananaAddress } = getNetworkConfig(network, accounts);
     const initialSupply = '3000000000000000000000000000'
 
-    if(!bananaAddress) {
+    if (!bananaAddress) {
         await deployer.deploy(MockBEP20, 'BANANA-Develop', 'BANANA', '1000000000000000000000000');
-    } else {
-        await MockBEP20.at(bananaAddress);
+        bananaAddress = MockBEP20.address
     }
 
-    console.log(MockBEP20.address)
     await deployer.deploy(RBanana, initialSupply);
-    await deployer.deploy(Treasoury, MockBEP20.address, RBanana.address);
+    await deployer.deploy(Treasoury, bananaAddress, RBanana.address);
 };

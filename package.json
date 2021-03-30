@@ -9,7 +9,7 @@
     "migrate": "truffle migrate --network testnet",
     "migrate:reset": "truffle migrate --network testnet --reset",
     "test": "rm -rf contracts/flattened/*.sol && truffle test",
-    "verify:testnet": "truffle run verify RBanana --network testnet"
+    "verify:testnet": "truffle run verify RBanana --network testnet && truffle run verify Treasoury --network testnet"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.2.0",

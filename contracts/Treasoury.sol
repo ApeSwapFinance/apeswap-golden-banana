@@ -28,8 +28,8 @@ contract Treasoury is Ownable {
     uint256 public sellPrice = 100; // 100% or 1 Banana
 
     // =================================
-    uint256 private bananaReserve = 0; // uses single storage slot, accessible via getReserves
-    uint256 private goldenBananaReserve = 0; // uses single storage slot, accessible via getReserves
+    uint256 bananaReserve = 0;
+    uint256 goldenBananaReserve = 0;
 
     event Buy(address indexed user, uint256 amount);
     event Sell(address indexed user, uint256 amount);
@@ -89,7 +89,7 @@ contract Treasoury is Ownable {
     }
 
     // Withdraw without caring about rewards. EMERGENCY ONLY.
-    function adminWithdraw(uint256 _amount) public onlyAdmin {
+    function adminWithdraw(uint256 _amount) public onlyOwner {
         goldenBanana.transferFrom(address(this), address(msg.sender), _amount);
     }
 
