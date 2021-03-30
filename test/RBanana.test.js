@@ -1,10 +1,4 @@
-const { BN, constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
-const chai = require('chai');
-const { assert } = chai;
-
-// Enable and inject BN dependency
-chai.use(require('chai-bn')(BN));
-const { ZERO_ADDRESS } = constants;
+const { BN, expectEvent } = require('@openzeppelin/test-helpers');
 
 const RBanana = artifacts.require('RBanana');
 

@@ -1,5 +1,6 @@
 pragma solidity ^0.6.2;
 
+// SPDX-License-Identifier: MIT
 /*
  * ApeSwapFinance
  * Reflect Token implementation
