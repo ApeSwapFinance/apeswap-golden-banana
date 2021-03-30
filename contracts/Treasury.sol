@@ -1,5 +1,4 @@
 pragma solidity 0.6.12;
-pragma experimental ABIEncoderV2;
 // SPDX-License-Identifier: MIT
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -9,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 // import "@nomiclabs/buidler/console.sol";
 
 // 4 numbers
-contract Treasoury is Ownable {
+contract Treasury is Ownable {
     using SafeMath for uint256;
     using SafeMath for uint8;
     using SafeERC20 for IERC20;
@@ -23,13 +22,13 @@ contract Treasoury is Ownable {
     // adminAddress
     address public adminAddress;
     // buyFee, if decimal is not 18, please reset it
-    uint256 public buyFee = 30; // 30% or 0.30 Banana
+    uint256 public buyFee = 2857; // 28.57% or 0.28.57 Banana
     // sellPrice, if decimal is not 18, please reset it
-    uint256 public sellPrice = 100; // 100% or 1 Banana
+    uint256 public sellPrice = 10000; // 100% or 1 Banana
 
     // =================================
-    uint256 bananaReserve = 0;
-    uint256 goldenBananaReserve = 0;
+    uint256 public bananaReserve = 0;
+    uint256 public goldenBananaReserve = 0;
 
     event Buy(address indexed user, uint256 amount);
     event Sell(address indexed user, uint256 amount);
@@ -58,7 +57,7 @@ contract Treasoury is Ownable {
 
     function buy(uint256 _amount) external lock {
         banana.safeTransferFrom(address(msg.sender), address(this), _amount);
-        uint256 bananaToBurn = _amount.mul(buyFee).div(100);
+        uint256 bananaToBurn = _amount.mul(buyFee).div(10000);
         uint256 goldenBananaToSend = _amount.sub(bananaToBurn);
         goldenBanana.transfer(address(msg.sender), goldenBananaToSend);
         bananaReserve = bananaReserve.add(goldenBananaToSend);
@@ -73,8 +72,8 @@ contract Treasoury is Ownable {
         uint balance = goldenBanana.balanceOf(address(this));
         uint amountIn = balance.sub(goldenBananaReserve);
         goldenBananaReserve = goldenBananaReserve.add(amountIn);
-        uint256 bananaToSend = amountIn.mul(sellPrice).div(100);
-        goldenBananaReserve = bananaReserve.sub(bananaToSend);
+        uint256 bananaToSend = amountIn.mul(sellPrice).div(10000);
+        bananaReserve = bananaReserve.sub(bananaToSend);
         banana.transfer(address(msg.sender), bananaToSend);
         emit Sell(msg.sender, _amount);
     }

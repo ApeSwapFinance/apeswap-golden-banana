@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 const BURN_ADDRESS = '0x000000000000000000000000000000000000dEaD'
 const RBanana = artifacts.require("RBanana");
-const Treasoury = artifacts.require("Treasoury");
+const Treasury = artifacts.require("Treasury");
 const MockBEP20 = artifacts.require("MockBEP20");
 
 contract('RBanana', (accounts) => {
@@ -11,17 +11,17 @@ contract('RBanana', (accounts) => {
     const decimalFactor = new BN(10).pow(new BN(18));
     const initialSupply = new BN('3000000000').mul(decimalFactor);
     const taxFee = new BN(200);
-    const burnFee = new BN(3000);
+    const burnFee = new BN(2857);
     const [ initialHolder, seller, buyer] = accounts
     
     beforeEach(async function () {
         this.rbanana = await RBanana.new(initialSupply);
         this.banana =  await MockBEP20.new('BANANA-Develop', 'BANANA', initialSupply);
 
-        this.treasoury = await Treasoury.new(this.banana.address, this.rbanana.address);
-        await this.rbanana.excludeAccount(this.treasoury.address);
-        await this.rbanana.transfer(this.treasoury.address, initialSupply.div(new BN(2)));
-        await this.treasoury.sync();
+        this.treasury = await Treasury.new(this.banana.address, this.rbanana.address);
+        await this.rbanana.excludeAccount(this.treasury.address);
+        await this.rbanana.transfer(this.treasury.address, initialSupply.div(new BN(2)));
+        await this.treasury.sync();
 
         await this.banana.transfer(buyer, new BN('100').mul(decimalFactor));
         await this.rbanana.transfer(seller, new BN('100').mul(decimalFactor));
@@ -35,8 +35,8 @@ contract('RBanana', (accounts) => {
 
       describe('for a non zero account', function () {
         beforeEach('transfer', async function () {
-          await this.banana.approve(this.treasoury.address, initialSupply, { from: buyer });
-          const { logs } = await this.treasoury.buy(amount, { from: buyer });
+          await this.banana.approve(this.treasury.address, initialSupply, { from: buyer });
+          const { logs } = await this.treasury.buy(amount, { from: buyer });
           this.logs = logs;
         });
   
@@ -61,12 +61,12 @@ contract('RBanana', (accounts) => {
           
           initialBalance = await this.rbanana.balanceOf(seller);
           // BUY to have money at fund
-          await this.banana.approve(this.treasoury.address, initialSupply, { from: buyer });
-          await this.treasoury.buy(amount.mul(new BN(2)), { from: buyer });
+          await this.banana.approve(this.treasury.address, initialSupply, { from: buyer });
+          await this.treasury.buy(amount.mul(new BN(2)), { from: buyer });
 
           // SELL
-          await this.rbanana.approve(this.treasoury.address, initialSupply, { from: seller });
-          const { logs } = await this.treasoury.sell(amount, { from: seller });
+          await this.rbanana.approve(this.treasury.address, initialSupply, { from: seller });
+          const { logs } = await this.treasury.sell(amount, { from: seller });
           this.logs = logs;
         });
   

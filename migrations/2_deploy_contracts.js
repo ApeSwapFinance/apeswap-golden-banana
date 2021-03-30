@@ -1,5 +1,5 @@
 const RBanana = artifacts.require("RBanana");
-const Treasoury = artifacts.require("Treasoury");
+const Treasury = artifacts.require("Treasury");
 const MockBEP20 = artifacts.require("MockBEP20");
 const { getNetworkConfig } = require('../deploy.config')
 
@@ -14,5 +14,5 @@ module.exports = async function(deployer,  network, accounts) {
     }
 
     await deployer.deploy(RBanana, initialSupply);
-    await deployer.deploy(Treasoury, bananaAddress, RBanana.address);
+    await deployer.deploy(Treasury, bananaAddress, RBanana.address);
 };
