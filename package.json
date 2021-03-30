@@ -1,0 +1,38 @@
+{
+  "name": "apeswap-lottery",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "testrpc": "ganache-cli --gasLimit 13000000 -e 100000 --networkId 666",
+    "compile": "truffle compile --network testnet",
+    "compile:waffle": "waffle .waffle.json",
+    "migrate": "truffle migrate --network testnet",
+    "migrate:reset": "truffle migrate --network testnet --reset",
+    "test": "rm -rf contracts/flattened/*.sol && truffle test",
+    "verify:testnet": "truffle run verify RBanana --network testnet"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.2.0",
+    "@openzeppelin/test-helpers": "^0.5.10",
+    "@pancakeswap/pancake-swap-lib": "0.0.2",
+    "dotenv": "^8.2.0",
+    "truffle": "^5.1.41",
+    "truffle-privatekey-provider": "^1.5.0"
+  },
+  "devDependencies": {
+    "@nomiclabs/buidler": "^1.4.7",
+    "@nomiclabs/buidler-ethers": "^2.0.0",
+    "@nomiclabs/buidler-truffle5": "^1.3.4",
+    "@nomiclabs/buidler-waffle": "^2.0.0",
+    "@nomiclabs/buidler-web3": "^1.3.4",
+    "chai": "^4.2.0",
+    "chai-bignumber": "^3.0.0",
+    "chai-bn": "^0.2.1",
+    "ethereum-waffle": "^3.2.2",
+    "ethers": "^5.0.14",
+    "truffle-flattener": "^1.4.4",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "truffle-plugin-verify": "^0.5.0",
+    "web3": "^1.3.0"
+  }
+}

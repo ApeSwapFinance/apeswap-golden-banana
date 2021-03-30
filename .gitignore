@@ -1,0 +1,7 @@
+.gitattributes
+.env
+build
+artifacts
+.idea/*
+node_modules/*
+contracts/flattened/*.sol
