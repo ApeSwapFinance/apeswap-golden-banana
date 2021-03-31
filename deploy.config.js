@@ -16,9 +16,7 @@ function getNetworkConfig(network, accounts) {
         console.log(`Deploying with development config.`)
         return {
             bananaAddress: undefined,
-            proxyAdmin: accounts[1],
-            lotteryOwner: accounts[2],
-            lotteryAdmin: accounts[3]
+            admin: '0xb5e1Ec9861D7c1C99cB3d79dd602cC6122F0d7dc'
         }
     } else {
         throw new Error(`No config found for network ${network}.`)
