@@ -1,13 +1,28 @@
-pragma solidity 0.6.12;
 // SPDX-License-Identifier: MIT
+pragma solidity 0.6.12;
+
+/*
+ * ApeSwapFinance
+ * App:             https://apeswap.finance
+ * Medium:          https://ape-swap.medium.com/
+ * Twitter:         https://twitter.com/ape_swap
+ * Telegram:        https://t.me/ape_swap
+ * Announcements:   https://t.me/ape_swap_news
+ * GitHub:          https://github.com/ApeSwapFinance
+ */
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-// import "@nomiclabs/buidler/console.sol";
-
-// 4 numbers
+/**
+ * The Treasury contract holds GoldenBanana that can be bought with BANANA and later 
+ *  be redeemed for BANANA.
+ * 
+ * To buy a GoldenBanana, a portion of the BANANA used will be burned in the process,
+ *  while the remaining BANANA will be locked in the contract to be unlocked at any 
+ *  future time.
+ */
 contract Treasury is Ownable {
     using SafeMath for uint256;
     using SafeMath for uint8;
@@ -23,12 +38,8 @@ contract Treasury is Ownable {
     address public adminAddress;
     // buyFee, if decimal is not 18, please reset it
     uint256 public buyFee = 2857; // 28.57% or 0.28.57 Banana
-    // sellPrice, if decimal is not 18, please reset it
-    uint256 public sellPrice = 10000; // 100% or 1 Banana
 
     // =================================
-    uint256 public bananaReserve = 0;
-    uint256 public goldenBananaReserve = 0;
 
     event Buy(address indexed user, uint256 amount);
     event Sell(address indexed user, uint256 amount);
@@ -55,57 +66,64 @@ contract Treasury is Ownable {
         unlocked = 1;
     }
 
+    /// @dev Buy Golden Banana with Banana. A potion of the Banana will be burned in the process.
+    /// @param _amount Amount of Golden Banana to sell
     function buy(uint256 _amount) external lock {
         banana.safeTransferFrom(address(msg.sender), address(this), _amount);
         uint256 bananaToBurn = _amount.mul(buyFee).div(10000);
         uint256 goldenBananaToSend = _amount.sub(bananaToBurn);
         goldenBanana.transfer(address(msg.sender), goldenBananaToSend);
-        bananaReserve = bananaReserve.add(goldenBananaToSend);
-        goldenBananaReserve = goldenBananaReserve.sub(goldenBananaToSend);
         _burnBananas(bananaToBurn);
         emit Buy(msg.sender, _amount);
     }
 
+    /// @dev Sell Golden Banana to redeem for Banana
+    /// @param _amount Amount of Golden Banana to sell
     function sell(uint256 _amount) external lock {
+        uint256 preGoldenBananaReserves = goldenBananaReserves();
         // TODO golden Banana safeTransferFrom ?
         goldenBanana.transferFrom(address(msg.sender), address(this), _amount);
-        uint balance = goldenBanana.balanceOf(address(this));
-        uint amountIn = balance.sub(goldenBananaReserve);
-        goldenBananaReserve = goldenBananaReserve.add(amountIn);
-        uint256 bananaToSend = amountIn.mul(sellPrice).div(10000);
-        bananaReserve = bananaReserve.sub(bananaToSend);
-        banana.transfer(address(msg.sender), bananaToSend);
+        /// @dev Because the Golden Banana is a reflect token, we need to find how much
+        ///  was transferred AFTER the reflect fee. 
+        uint256 amountIn = goldenBananaReserves().sub(preGoldenBananaReserves);
+        banana.transfer(address(msg.sender), amountIn);
         emit Sell(msg.sender, _amount);
     }
 
+    /// @dev Burns Banana by sending them to the burn address
+    /// @param _amount Amount of Banana to burn
     function _burnBananas(uint256 _amount) internal {
         banana.transfer(burnAddress, _amount);
     }
 
-    // Update admin address by the previous dev.
-    function setAdmin(address _adminAddress) public onlyOwner {
+    /// @dev Obtain the amount of Banana held by this contract
+    function bananaReserves() public returns (uint256) {
+        return banana.balanceOf(address(this));
+    }
+
+    /// @dev Obtain the amount of Golden Banana held by this contract
+    function goldenBananaReserves() public returns (uint256) {
+        return goldenBanana.balanceOf(address(this));
+    }
+
+    /* Owner Functions */
+
+    /// @dev Use the owner address to update the admin
+    function setAdmin(address _adminAddress) external onlyOwner {
         adminAddress = _adminAddress;
     }
 
-    // Withdraw without caring about rewards. EMERGENCY ONLY.
-    function adminWithdraw(uint256 _amount) public onlyOwner {
+    /// @dev Incase of a problem with the treasury contract, the Golden Banana can be removed
+    ///  and sent to a new treasury contract
+    function emergencyWithdraw(uint256 _amount) external onlyOwner {
         goldenBanana.transferFrom(address(this), address(msg.sender), _amount);
     }
 
-    // Set the minimum price for one ticket
-    function setBuyFee(uint256 _price) external onlyAdmin {
-        buyFee = _price;
-    }
+    /* Admin Functions */
 
-        // Set the minimum price for one ticket
-    function setSellPrice(uint256 _price) external onlyAdmin {
-        sellPrice = _price;
+    /// @dev Set the fee that will be used to burn Banana on purchases
+    /// @param _fee The fee used for burning. 10000 = 100%
+    function setBuyFee(uint256 _fee) external onlyAdmin {
+        buyFee = _fee;
     }
-
-    // force reserves to match balances
-    function sync() external lock {
-        goldenBananaReserve = goldenBanana.balanceOf(address(this));
-        bananaReserve = banana.balanceOf(address(this));
-    }
-
 }
