@@ -1,6 +1,6 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.6.12;
 
-// SPDX-License-Identifier: MIT
 /*
  * ApeSwapFinance
  * App:             https://apeswap.finance
@@ -14,7 +14,7 @@ pragma solidity 0.6.12;
 import "./RBEP20.sol";
 
 // GoldenBanana Reflect with Governance.
-contract RBanana is RBEP20 {
+contract GoldenBanana is RBEP20 {
 
     // Copied and modified from YAM code:
     // https://github.com/yam-finance/yam-protocol/blob/master/contracts/token/YAMGovernanceStorage.sol
