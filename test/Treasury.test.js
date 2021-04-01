@@ -2,11 +2,11 @@ const { BN } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 
 const BURN_ADDRESS = '0x000000000000000000000000000000000000dEaD'
-const RBanana = artifacts.require("RBanana");
+const GoldenBanana = artifacts.require("GoldenBanana");
 const Treasury = artifacts.require("Treasury");
 const MockBEP20 = artifacts.require("MockBEP20");
 
-contract('RBanana', (accounts) => {
+contract('GoldenBanana', (accounts) => {
 
     const decimalFactor = new BN(10).pow(new BN(18));
     const initialSupply = new BN('3000000000').mul(decimalFactor);
@@ -15,16 +15,15 @@ contract('RBanana', (accounts) => {
     const [ initialHolder, seller, buyer] = accounts
     
     beforeEach(async function () {
-        this.rbanana = await RBanana.new(initialSupply);
+        this.goldenBanana = await GoldenBanana.new(initialSupply);
         this.banana =  await MockBEP20.new('BANANA-Develop', 'BANANA', initialSupply);
 
-        this.treasury = await Treasury.new(this.banana.address, this.rbanana.address);
-        await this.rbanana.excludeAccount(this.treasury.address);
-        await this.rbanana.transfer(this.treasury.address, initialSupply.div(new BN(2)));
-        await this.treasury.sync();
+        this.treasury = await Treasury.new(this.banana.address, this.goldenBanana.address);
+        await this.goldenBanana.excludeAccount(this.treasury.address);
+        await this.goldenBanana.transfer(this.treasury.address, initialSupply.div(new BN(2)));
 
         await this.banana.transfer(buyer, new BN('100').mul(decimalFactor));
-        await this.rbanana.transfer(seller, new BN('100').mul(decimalFactor));
+        await this.goldenBanana.transfer(seller, new BN('100').mul(decimalFactor));
     });
 
     describe('buy', function () {
@@ -41,7 +40,7 @@ contract('RBanana', (accounts) => {
         });
   
         it('increments recipient balance and triggers burn', async function () {
-          const balance = await this.rbanana.balanceOf(buyer);
+          const balance = await this.goldenBanana.balanceOf(buyer);
           const burned = await this.banana.balanceOf(BURN_ADDRESS);
           expect(burned.eq(burn)).to.be.true;
           expect(balance.gte(receivedAmount)).to.be.true;
@@ -59,19 +58,19 @@ contract('RBanana', (accounts) => {
         let initialBalance;
         beforeEach('transfer', async function () {
           
-          initialBalance = await this.rbanana.balanceOf(seller);
+          initialBalance = await this.goldenBanana.balanceOf(seller);
           // BUY to have money at fund
           await this.banana.approve(this.treasury.address, initialSupply, { from: buyer });
           await this.treasury.buy(amount.mul(new BN(2)), { from: buyer });
 
           // SELL
-          await this.rbanana.approve(this.treasury.address, initialSupply, { from: seller });
+          await this.goldenBanana.approve(this.treasury.address, initialSupply, { from: seller });
           const { logs } = await this.treasury.sell(amount, { from: seller });
           this.logs = logs;
         });
   
         it('increments sells the megabanana for banana', async function () {
-          const balance = await this.rbanana.balanceOf(seller);
+          const balance = await this.goldenBanana.balanceOf(seller);
           const bananaBalance = await this.banana.balanceOf(seller);
           // TODO validate initial balance vs balance
           console.log(initialBalance.toString());

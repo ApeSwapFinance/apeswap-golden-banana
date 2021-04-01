@@ -7,6 +7,7 @@
     "compile": "truffle compile --network testnet",
     "compile:waffle": "waffle .waffle.json",
     "migrate": "truffle migrate --network testnet",
+    "migrate:development": "truffle migrate --network development --reset",
     "migrate:reset": "truffle migrate --network testnet --reset",
     "test": "rm -rf contracts/flattened/*.sol && truffle test",
     "verify:testnet": "truffle run verify RBanana --network testnet && truffle run verify Treasury --network testnet"
@@ -30,6 +31,7 @@
     "chai-bn": "^0.2.1",
     "ethereum-waffle": "^3.2.2",
     "ethers": "^5.0.14",
+    "ganache-cli": "^6.12.2",
     "truffle-flattener": "^1.4.4",
     "truffle-hdwallet-provider": "^1.0.17",
     "truffle-plugin-verify": "^0.5.0",
