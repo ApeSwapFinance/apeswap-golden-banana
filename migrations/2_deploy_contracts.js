@@ -15,4 +15,7 @@ module.exports = async function(deployer,  network, accounts) {
 
     await deployer.deploy(GoldenBanana, initialSupply);
     await deployer.deploy(Treasury, bananaAddress, GoldenBanana.address);
+
+    const goldenBanana = await GoldenBanana.deployed();
+    await goldenBanana.excludeAccount(Treasury.address);
 };

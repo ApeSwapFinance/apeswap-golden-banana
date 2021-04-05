@@ -1,6 +1,5 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
 require('dotenv').config();
-const fs = require('fs');
 
 module.exports = {
   networks: {
@@ -28,7 +27,7 @@ module.exports = {
     'truffle-plugin-verify'
   ],
   api_keys: {
-    // Add ETHERSCAN_API_KEY in .env file to verify contracts deployed through truffle
+    // Add BSCSCAN_KEY in .env file to verify contracts deployed through truffle
     bscscan: process.env.BSCSCAN_KEY
   },
   // Set default mocha options here, use special reporters etc.

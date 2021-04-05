@@ -275,27 +275,4 @@ contract RBEP20 is Context, IERC20, Ownable {
         return (rSupply, tSupply);
     }
 
-    /** @dev Creates `amount` tokens and assigns them to `account`, increasing
-     * the total supply.
-     *
-     * Emits a {Transfer} event with `from` set to the zero address.
-     *
-     * Requirements
-     *
-     * - `to` cannot be the zero address.
-     */
-    function _mint(address account, uint256 amount) internal {
-        require(account != address(0), 'BEP20: mint to the zero address');
-        _tTotal = _tTotal.add(amount);
-        _rTotal = (MAX - (MAX % _tTotal));
-        _rTotal = _rTotal.sub(_tFeeTotal);
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee) = _getValues(amount);
-        _rOwned[account] = _rOwned[account].add(rAmount);
-        emit Transfer(address(0), account, amount);
-    }
-
-    /// @notice Creates `_amount` token to `_to`.
-    function mint(address to, uint256 amount) public onlyOwner {
-        _mint(to, amount);
-    }
 }

@@ -16,11 +16,11 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * The Treasury contract holds GoldenBanana that can be bought with BANANA and later 
+ * The Treasury contract holds GoldenBanana that can be bought with BANANA and later
  *  be redeemed for BANANA.
- * 
+ *
  * To buy a GoldenBanana, a portion of the BANANA used will be burned in the process,
- *  while the remaining BANANA will be locked in the contract to be unlocked at any 
+ *  while the remaining BANANA will be locked in the contract to be unlocked at any
  *  future time.
  */
 contract Treasury is Ownable {
@@ -37,7 +37,7 @@ contract Treasury is Ownable {
     // adminAddress
     address public adminAddress;
     // buyFee, if decimal is not 18, please reset it
-    uint256 public buyFee = 2857; // 28.57% or 0.28.57 Banana
+    uint256 public buyFee = 2857; // 28.57% or 0.2857 Banana
 
     // =================================
 
@@ -81,10 +81,9 @@ contract Treasury is Ownable {
     /// @param _amount Amount of Golden Banana to sell
     function sell(uint256 _amount) external lock {
         uint256 preGoldenBananaReserves = goldenBananaReserves();
-        // TODO golden Banana safeTransferFrom ?
-        goldenBanana.transferFrom(address(msg.sender), address(this), _amount);
+        goldenBanana.safeTransferFrom(address(msg.sender), address(this), _amount);
         /// @dev Because the Golden Banana is a reflect token, we need to find how much
-        ///  was transferred AFTER the reflect fee. 
+        ///  was transferred AFTER the reflect fee.
         uint256 amountIn = goldenBananaReserves().sub(preGoldenBananaReserves);
         banana.transfer(address(msg.sender), amountIn);
         emit Sell(msg.sender, _amount);
@@ -97,12 +96,12 @@ contract Treasury is Ownable {
     }
 
     /// @dev Obtain the amount of Banana held by this contract
-    function bananaReserves() public returns (uint256) {
+    function bananaReserves() public view returns (uint256) {
         return banana.balanceOf(address(this));
     }
 
     /// @dev Obtain the amount of Golden Banana held by this contract
-    function goldenBananaReserves() public returns (uint256) {
+    function goldenBananaReserves() public view returns (uint256) {
         return goldenBanana.balanceOf(address(this));
     }
 
