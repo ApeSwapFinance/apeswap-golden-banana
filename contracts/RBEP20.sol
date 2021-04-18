@@ -34,13 +34,16 @@ contract RBEP20 is Context, IERC20, Ownable {
     string private _symbol;
     uint8 private _decimals;
 
-    uint256 _taxFee = 200;
+    uint256 _taxFee = 200; // 2%
+    uint256 _maxTaxFee = 1000; // 10%
     uint256 private constant _GRANULARITY = 100;
 
     uint256 private constant MAX = ~uint256(0);
     uint256 private _tTotal;
     uint256 private _rTotal;
     uint256 private _tFeeTotal;
+
+    event UpdateTaxFee(uint256 previousTaxFee, uint256 newTaxFee);
 
     constructor (
         uint256 initialSupply,
@@ -75,6 +78,14 @@ contract RBEP20 is Context, IERC20, Ownable {
 
     function totalSupply() public view override returns (uint256) {
         return _tTotal;
+    }
+
+    function taxFee() external view returns (uint256) {
+        return _taxFee;
+    }
+
+    function maxTaxFee() external view returns (uint256) {
+        return _maxTaxFee;
     }
 
     function balanceOf(address account) public view override returns (uint256) {
@@ -120,7 +131,7 @@ contract RBEP20 is Context, IERC20, Ownable {
         return _tFeeTotal;
     }
 
-    function reflect(uint256 tAmount) public {
+    function reflect(uint256 tAmount) external {
         address sender = _msgSender();
         require(!_isExcluded[sender], "Excluded addresses cannot call this function");
         (uint256 rAmount,,,,) = _getValues(tAmount);
@@ -131,13 +142,8 @@ contract RBEP20 is Context, IERC20, Ownable {
 
     function reflectionFromToken(uint256 tAmount, bool deductTransferFee) public view returns(uint256) {
         require(tAmount <= _tTotal, "Amount must be less than supply");
-        if (!deductTransferFee) {
-            (uint256 rAmount,,,,) = _getValues(tAmount);
-            return rAmount;
-        } else {
-            (,uint256 rTransferAmount,,,) = _getValues(tAmount);
-            return rTransferAmount;
-        }
+        (uint256 rAmount, uint256 rTransferAmount,,,) = _getValues(tAmount);
+        return deductTransferFee ? rTransferAmount : rAmount;
     }
 
     function tokenFromReflection(uint256 rAmount) public view returns(uint256) {
@@ -169,7 +175,10 @@ contract RBEP20 is Context, IERC20, Ownable {
     }
 
     function updateTaxFee(uint256 _fee) public onlyOwner {
+        require(_fee <= _maxTaxFee, 'fee must be mess than maxTaxFee');
+        uint256 previousTaxFee = _taxFee;
         _taxFee = _fee;
+        emit UpdateTaxFee(previousTaxFee, _taxFee);
     }
 
     function _approve(address owner, address spender, uint256 amount) private {
@@ -188,11 +197,10 @@ contract RBEP20 is Context, IERC20, Ownable {
             _transferFromExcluded(sender, recipient, amount);
         } else if (!_isExcluded[sender] && _isExcluded[recipient]) {
             _transferToExcluded(sender, recipient, amount);
-        } else if (!_isExcluded[sender] && !_isExcluded[recipient]) {
-            _transferStandard(sender, recipient, amount);
         } else if (_isExcluded[sender] && _isExcluded[recipient]) {
             _transferBothExcluded(sender, recipient, amount);
         } else {
+            /// @dev neither are excluded
             _transferStandard(sender, recipient, amount);
         }
     }
