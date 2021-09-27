@@ -6,7 +6,7 @@ function getNetworkConfig(network, accounts) {
             bananaAddress: '0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95',
             admin: '0xCaE366497aC10De7f1faeBBf496E7dBD7764C6b3'
         }
-    } else if (['testnet', 'testnet-fork'].includes(network)) {
+    } else if (['bsc-testnet', 'bsc-testnet-fork'].includes(network)) {
         console.log(`Deploying with BSC testnet config.`)
         return {
             bananaAddress: '0x4Fb99590cA95fc3255D9fA66a1cA46c43C34b09a',

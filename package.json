@@ -8,9 +8,11 @@
     "compile:waffle": "waffle .waffle.json",
     "migrate": "truffle migrate --network testnet",
     "migrate:development": "truffle migrate --network development --reset",
+    "migrate:bsc-testnet": "truffle migrate --network bsc-testnet --reset",
     "migrate:reset": "truffle migrate --network testnet --reset",
     "test": "rm -rf contracts/flattened/*.sol && truffle test",
-    "verify:testnet": "truffle run verify GoldenBanana --network testnet && truffle run verify Treasury --network testnet"
+    "verify:bsc-testnet": "truffle run verify GoldenBanana --network bsc-testnet && truffle run verify Treasury --network bsc-testnet",
+    "verify:bsc-testnet:faucet": "truffle run verify GoldenBanana --network bsc-testnet && truffle run verify Faucet --network bsc-testnet"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.2.0",
