@@ -22,19 +22,17 @@ contract Faucet is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    // Golden Banana
-    IERC20 public goldenBanana;
-    // 
+    IERC20 public faucetToken;
     uint public transferAmount = 10000 * 1e18;
 
     constructor(
-        IERC20 _goldenBanana
+        IERC20 _faucetToken
     ) public {
-        goldenBanana = _goldenBanana;
+        faucetToken = _faucetToken;
     }
 
-    function getGNANA() external {
-        goldenBanana.safeTransfer(address(msg.sender), transferAmount);
+    function getToken() external {
+        faucetToken.safeTransfer(address(msg.sender), transferAmount);
     }
 
     function adjustTransferAmount(uint256 _amount) external onlyOwner {

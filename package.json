@@ -12,7 +12,8 @@
     "migrate:reset": "truffle migrate --network testnet --reset",
     "test": "rm -rf contracts/flattened/*.sol && truffle test",
     "verify:bsc-testnet": "truffle run verify GoldenBanana --network bsc-testnet && truffle run verify Treasury --network bsc-testnet",
-    "verify:bsc-testnet:faucet": "truffle run verify GoldenBanana --network bsc-testnet && truffle run verify Faucet --network bsc-testnet",
+    "verify:bsc-testnet:faucet-gnana": "truffle run verify GoldenBanana --network bsc-testnet && truffle run verify Faucet --network bsc-testnet",
+    "verify:bsc-testnet:faucet-generic": "truffle run verify Faucet --network bsc-testnet",
     "verify:bsc-testnet:mock": "truffle run verify GoldenBananaMock --network bsc-testnet"
   },
   "dependencies": {
