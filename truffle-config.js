@@ -9,7 +9,7 @@ require('dotenv').config();
  */
 function getRandomRPC(rpcUrlArray) {
   // Using `| 0` here in place of Math.floor()
-  return rpcUrlArray[(Math.random() * myArray.length) | 0]
+  return rpcUrlArray[(Math.random() * rpcUrlArray.length) | 0]
 }
 
 module.exports = {
@@ -22,9 +22,9 @@ module.exports = {
     "bsc-testnet": {
       provider: () => new HDWalletProvider(
         process.env.BSC_TESTNET_DEPLOYER_KEY,
-        getRandomRPC[
-        `https://data-seed-prebsc-1-s1.binance.org:8545`
-        ]
+        getRandomRPC([
+          `https://data-seed-prebsc-1-s1.binance.org:8545`
+        ])
       ),
       network_id: 97,
       confirmations: 2,
@@ -33,10 +33,10 @@ module.exports = {
     },
     bsc: {
       provider: () => new HDWalletProvider(
-        process.env.BSC_DEPLOYER_KEY, 
-        getRandomRPC[
+        process.env.BSC_DEPLOYER_KEY,
+        getRandomRPC([
           `https://bsc-dataseed1.binance.org`
-          ]
+        ])
       ),
       network_id: 56,
       confirmations: 10,
