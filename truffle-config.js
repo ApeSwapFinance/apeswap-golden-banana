@@ -1,6 +1,22 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
 require('dotenv').config();
 
+const months = ["January", "February", "March", "April", "May", "June", "July"];
+
+const random = Math.floor(Math.random() * months.length);
+console.log(random, months[random]);
+
+/**
+ * Pass in an array of RPC urls to grab a random one on each run
+ * 
+ * @param {*} rpcUrlArray 
+ * @returns rpcUrl
+ */
+function getRandomRPC(rpcUrlArray) {
+  // Using `| 0` here in place of Math.floor()
+  return rpcUrlArray[(Math.random() * myArray.length) | 0]
+}
+
 module.exports = {
   networks: {
     development: {
@@ -9,14 +25,24 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
     },
     "bsc-testnet": {
-      provider: () => new HDWalletProvider(process.env.BSC_TESTNET_DEPLOYER_KEY, `https://data-seed-prebsc-2-s1.binance.org:8545`),
+      provider: () => new HDWalletProvider(
+        process.env.BSC_TESTNET_DEPLOYER_KEY,
+        getRandomRPC[
+        `https://data-seed-prebsc-1-s1.binance.org:8545`
+        ]
+      ),
       network_id: 97,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true,
     },
     bsc: {
-      provider: () => new HDWalletProvider(process.env.BSC_DEPLOYER_KEY, `https://bsc-dataseed1.binance.org`),
+      provider: () => new HDWalletProvider(
+        process.env.BSC_DEPLOYER_KEY, 
+        getRandomRPC[
+          `https://bsc-dataseed1.binance.org`
+          ]
+      ),
       network_id: 56,
       confirmations: 10,
       timeoutBlocks: 200,
