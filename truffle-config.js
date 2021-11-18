@@ -1,11 +1,6 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
 require('dotenv').config();
 
-const months = ["January", "February", "March", "April", "May", "June", "July"];
-
-const random = Math.floor(Math.random() * months.length);
-console.log(random, months[random]);
-
 /**
  * Pass in an array of RPC urls to grab a random one on each run
  * 
