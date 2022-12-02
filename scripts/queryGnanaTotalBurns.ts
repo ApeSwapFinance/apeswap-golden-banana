@@ -1,17 +1,19 @@
 import { EtherscanService, getConfig } from '@defifofum/etherscan-sdk';
 import { writeJSONToFile } from './helpers/files';
+import { ether } from './helpers/bnHelper';
 const { BN } = require('@openzeppelin/test-helpers');
 
 const { baseUrl: BASE_URL, apiKey: API_KEY } = getConfig('bsc');
 const etherscanService = new EtherscanService(BASE_URL, API_KEY);
-
+// BSC API is 5 requests per second on the free plan. 
+const REQUEST_LIMIT_DELAY = 500;
 // 1 Block before deployment block.
 const GNANA_START_BLOCK = 6746485;
 // BSCScan will only return the first 10,000 transfers. 
 // This settings aims to ensure that no transfers are missed
 const BLOCK_DIFF = 100000;
 // TODO: CAP to set the final call to 'latest'
-const MAX_BLOCK = 23282541;
+const MAX_BLOCK = 23546350;
 
 // NOTE: Check config settings
 const filterConfig = {
@@ -36,6 +38,7 @@ async function getTransfersAndFilter(startBlock?: number, endBlock?: number | st
     });
 
     try {
+        // Returned are all transfers from the `from` address. 
         const filteredTransfers = transfers.filter((transfer) => {
             if (transfer.contractAddress != filterConfig.contractAddress) return false;
             if (transfer.to != filterConfig.to) return false;
@@ -51,7 +54,7 @@ async function getTransfersAndFilter(startBlock?: number, endBlock?: number | st
     }
 }
 
-(async function () {
+async function script() {
     const transferPromises = [];
 
     for (let startBlock = GNANA_START_BLOCK; startBlock <= MAX_BLOCK; startBlock += BLOCK_DIFF) {
@@ -59,8 +62,7 @@ async function getTransfersAndFilter(startBlock?: number, endBlock?: number | st
         let endBlock: string | number = startBlock + BLOCK_DIFF - 1;
         // if(endBlock >= MAX_BLOCK) endBlock = 'latest';
         transferPromises.push(getTransfersAndFilter(startBlock, endBlock));
-        // BSC API is 5 requests per second. This is about a 10% buffer per call
-        await wait(500);
+        await wait(REQUEST_LIMIT_DELAY);
     }
 
     const transferArray = await Promise.all(transferPromises);
@@ -75,12 +77,16 @@ async function getTransfersAndFilter(startBlock?: number, endBlock?: number | st
     totalBurn = totalBurn.toString();
 
     console.log(`Total Burn Wei: ${totalBurn}.`);
-    console.log(
-        `Total Burn: ${new BN(totalBurn)
-            .div(new BN("1000000000000000000"))
-            .toString()}.`
-    );
+    console.log(`Total Burn: ${ether(totalBurn)}.`);
+};
 
-    await Promise.resolve(console.log('🎉'));
-    process.exit(0);
+(async function () {
+    try {
+        await script();
+        console.log('🎉')
+        process.exit(0);
+    } catch (e) {
+        console.dir(e);
+        process.exit(1);
+    }
 })();
