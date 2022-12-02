@@ -15,10 +15,11 @@
     "verify:bsc-testnet:faucet-gnana": "truffle run verify GoldenBanana --network bsc-testnet && truffle run verify Faucet --network bsc-testnet",
     "verify:bsc-testnet:faucet-generic": "truffle run verify Faucet --network bsc-testnet",
     "verify:bsc-testnet:mock": "truffle run verify GoldenBananaMock --network bsc-testnet",
-    "script:gnana-burn": "ts-node ./scripts/queryGnanaTotalBurns.ts"
+    "script:gnana-burn": "ts-node ./scripts/queryGnanaTotalBurns.ts",
+    "script:sum-gnana-burn": "ts-node ./scripts/sumGnanaBurns.ts"
   },
   "dependencies": {
-    "@defifofum/etherscan-sdk": "^0.0.10",
+    "@defifofum/etherscan-sdk": "^0.0.12",
     "@openzeppelin/contracts": "^3.2.0",
     "@openzeppelin/test-helpers": "^0.5.10",
     "@pancakeswap/pancake-swap-lib": "0.0.2",

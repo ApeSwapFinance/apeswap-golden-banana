@@ -51,10 +51,13 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@defifofum/etherscan-sdk@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@defifofum/etherscan-sdk/-/etherscan-sdk-0.0.10.tgz#093d8d63dfd4a45111943a11255fe6723434b5a2"
-  integrity sha512-YwSovFvIufCljL5AUaFywOScQ0E7W/9Y3hWiWWSiijzI7PeIswpEtSxqdR4lw+Tt6r7XHh86FhMbtI1SXxhI7g==
+"@defifofum/etherscan-sdk@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@defifofum/etherscan-sdk/-/etherscan-sdk-0.0.12.tgz#4d14cdc202eb4729f52d3367b7dea3c6ddeaf270"
+  integrity sha512-3gjdiBfjaqQNNFCuxk/WN5JeGkDKsyYX3YfVHQoFB/BwvhaxIYYYu0cFuqNcf2y8udu+VIPrY3ZF4O92gi0hGQ==
+  dependencies:
+    axios "^0.26.1"
+    dotenv "^16.0.0"
 
 "@ensdomains/ens@^0.4.4":
   version "0.4.5"
@@ -1554,6 +1557,13 @@ axios@0.19.2:
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
   dependencies:
     follow-redirects "1.5.10"
+
+axios@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
+  integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
+  dependencies:
+    follow-redirects "^1.14.8"
 
 babel-code-frame@^6.26.0:
   version "6.26.0"
@@ -3507,6 +3517,11 @@ dot-case@^2.1.0:
   dependencies:
     no-case "^2.2.0"
 
+dotenv@^16.0.0:
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
+
 dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
@@ -4793,6 +4808,11 @@ follow-redirects@1.5.10:
   integrity sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
   dependencies:
     debug "=3.1.0"
+
+follow-redirects@^1.14.8:
+  version "1.15.2"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
+  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
 for-each@^0.3.3, for-each@~0.3.3:
   version "0.3.3"
